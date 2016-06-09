@@ -6,9 +6,11 @@ class App < Sinatra::Base
   register Sinatra::ConfigFile
   config_file 'config.yml'
 
-  get '/google/' do
+  before do
     content_type 'application/json'
+  end
 
+  get '/google/' do
     unless settings.token.include? params[:token] and params[:team_domain] == settings.team_domain
       return
     end
@@ -27,6 +29,24 @@ class App < Sinatra::Base
       attachments: [{
         text: "#{result['items'][0]['title']}: #{result['items'][0]['snippet']}"
       }]
+    }.to_json
+  end
+
+  get '/image/' do
+    unless settings.token.include? params[:token] and params[:team_domain] == settings.team_domain
+      return
+    end
+
+    puts params[:response_url]
+
+    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high', image = true)
+
+    {
+      response_type: 'in_channel',
+      text: result['items'][0]['link'],
+      # attachments: [{
+      #   text: "#{result['items'][0]['title']}: #{result['items'][0]['snippet']}"
+      # }]
     }.to_json
   end
 end
