@@ -9,9 +9,14 @@ class App < Sinatra::Base
   get '/google/' do
     content_type 'application/json'
 
-    puts params.inspect
+    unless params[:token] == settings.token
+      and params[:team_domain] == settings.team_domain
+    end
 
-    result = OnewheelGoogle::search('google', settings.cse_id, settings.api_key, 'high')
+    puts params[:response_url]
+
+    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high')
+
     {
       response_type: 'in_channel',
       text: result['items'][0]['link'],
