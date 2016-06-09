@@ -18,12 +18,22 @@ class App < Sinatra::Base
     true
   end
 
+  def run_search(image = false)
+    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high', image)
+
+    unless result
+      halt 500, '{"message": "search failed to return results."}'
+    end
+
+    result
+  end
+
   get '/google/' do
-    halt 400, 'Auth failed.' if check_auth(params)
+    halt 400, '{"message": "Auth failed."}' unless check_auth(params)
 
     puts params[:response_url]
 
-    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high')
+    result = run_search
 
     {
       response_type: 'in_channel',
@@ -35,11 +45,11 @@ class App < Sinatra::Base
   end
 
   get '/image/' do
-    halt 400, 'Auth failed.' if check_auth(params)
+    halt 400, 'Auth failed.' unless check_auth(params)
 
     puts params[:response_url]
 
-    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high', image = true)
+    result = run_search(image = true)
 
     {
       response_type: 'in_channel',
