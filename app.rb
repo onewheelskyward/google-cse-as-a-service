@@ -10,19 +10,19 @@ class App < Sinatra::Base
     content_type 'application/json'
   end
 
-  get '/google/' do
+  def check_auth(params)
     unless settings.token.include? params[:token] and settings.team_domain.include? params[:team_domain]
       puts "Token #{params[:token]} not found in #{settings.token} or #{params[:team_domain]} doesn't match #{settings.team_domain}"
-      return
+      return false
     end
+  end
+
+  get '/google/' do
+    halt 400, 'Auth failed.' if check_auth(params)
 
     puts params[:response_url]
 
-    image = false
-    if params[:command] == '/image'
-      image = true
-    end
-    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high', image)
+    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high')
 
     {
       response_type: 'in_channel',
@@ -34,10 +34,7 @@ class App < Sinatra::Base
   end
 
   get '/image/' do
-    unless settings.token.include? params[:token] and settings.team_domain.include? params[:team_domain]
-      puts "Token #{params[:token]} not found in #{settings.token} or #{params[:team_domain]} doesn't match #{settings.team_domain}"
-      return
-    end
+    halt 400, 'Auth failed.' if check_auth(params)
 
     puts params[:response_url]
 
@@ -46,9 +43,6 @@ class App < Sinatra::Base
     {
       response_type: 'in_channel',
       text: result['items'][0]['link'],
-      # attachments: [{
-      #   text: "#{result['items'][0]['title']}: #{result['items'][0]['snippet']}"
-      # }]
     }.to_json
   end
 end
