@@ -2,4 +2,4 @@ source 'https://rubygems.org'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'onewheel-google', '~> 0'
+gem 'onewheel-google', '~> 1'
