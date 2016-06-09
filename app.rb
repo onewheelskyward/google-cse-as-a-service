@@ -11,10 +11,11 @@ class App < Sinatra::Base
   end
 
   def check_auth(params)
-    unless settings.token.include? params[:token] and settings.team_domain.include? params[:team_domain]
-      puts "Token #{params[:token]} not found in #{settings.token} or #{params[:team_domain]} doesn't match #{settings.team_domain}"
-      return false
+    unless settings.tokens.include? params[:token] and settings.team_domains.include? params[:team_domain]
+      puts "Token #{params[:token]} not found in #{settings.tokens} or #{params[:team_domain]} doesn't match #{settings.team_domains}"
+      false
     end
+    true
   end
 
   get '/google/' do
