@@ -11,7 +11,8 @@ class App < Sinatra::Base
   end
 
   get '/google/' do
-    unless settings.token.include? params[:token] and params[:team_domain] == settings.team_domain
+    unless settings.token.include? params[:token] and settings.team_domain.include? params[:team_domain]
+      puts "Token #{params[:token]} not found in #{settings.token} or #{params[:team_domain]} doesn't match #{settings.team_domain}"
       return
     end
 
@@ -33,7 +34,8 @@ class App < Sinatra::Base
   end
 
   get '/image/' do
-    unless settings.token.include? params[:token] and params[:team_domain] == settings.team_domain
+    unless settings.token.include? params[:token] and settings.team_domain.include? params[:team_domain]
+      puts "Token #{params[:token]} not found in #{settings.token} or #{params[:team_domain]} doesn't match #{settings.team_domain}"
       return
     end
 
