@@ -9,13 +9,17 @@ class App < Sinatra::Base
   get '/google/' do
     content_type 'application/json'
 
-    unless params[:token] == settings.token and params[:team_domain] == settings.team_domain
+    unless settings.token.include? params[:token] and params[:team_domain] == settings.team_domain
       return
     end
 
     puts params[:response_url]
 
-    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high')
+    image = false
+    if params[:command] == '/image'
+      image = true
+    end
+    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high', image)
 
     {
       response_type: 'in_channel',
