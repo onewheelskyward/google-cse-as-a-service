@@ -9,8 +9,8 @@ class App < Sinatra::Base
   get '/google/' do
     content_type 'application/json'
 
-    unless params[:token] == settings.token
-      and params[:team_domain] == settings.team_domain
+    unless params[:token] == settings.token and params[:team_domain] == settings.team_domain
+      return
     end
 
     puts params[:response_url]
