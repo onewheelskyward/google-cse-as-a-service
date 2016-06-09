@@ -6,7 +6,7 @@ class App < Sinatra::Base
   register Sinatra::ConfigFile
   config_file 'config.yml'
 
-  get '/google' do
+  get '/google/' do
     content_type 'application/json'
 
     puts params.inspect
