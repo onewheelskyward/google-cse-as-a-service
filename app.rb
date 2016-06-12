@@ -3,6 +3,14 @@ require 'onewheel-google'
 require 'sinatra/config_file'
 
 class App < Sinatra::Base
+
+  # Copy the config file from dist if it does not exist
+  config_file = File.dirname(__FILE__) + '/config.yml'
+  unless File.exist? config_file
+    puts 'Auto-copying config distribution file to active config'
+    system "cp #{File.dirname(__FILE__)}/config/config.yml.dist #{config_file}"
+  end
+
   register Sinatra::ConfigFile
   config_file 'config.yml'
 

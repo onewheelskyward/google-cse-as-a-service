@@ -25,9 +25,9 @@ end
 
 describe 'The google-cse-as-a-service App' do
   before do
-    allow(App).to receive(:check_auth).and_return(true)
-    App.settings.tokens = ['x']
-    App.settings.team_domains = ['woo']
+    # allow(App).to receive(:check_auth).and_return(true)
+    expect(Sinatra::Application).to receive(:check_auth).and_return(true)
+    expect(Sinatra::Application).to receive(:tokens).and_return('x')
     mock_result_json = File.open('spec/fixture.json').read
     allow(OnewheelGoogle).to receive(:search).and_return(JSON.parse mock_result_json)
   end
