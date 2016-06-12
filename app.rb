@@ -28,7 +28,7 @@ class App < Sinatra::Base
     result
   end
 
-  get '/google/' do
+  get '/google*' do
     halt 400, '{"message": "Auth failed."}' unless check_auth(params)
 
     puts params[:response_url]
@@ -44,7 +44,7 @@ class App < Sinatra::Base
     }.to_json
   end
 
-  get '/image/' do
+  get '/image*' do
     halt 400, 'Auth failed.' unless check_auth(params)
 
     puts params[:response_url]
@@ -57,7 +57,7 @@ class App < Sinatra::Base
     }.to_json
   end
 
-  get '/giphy/' do
+  get '/giphy*' do
     halt 400, 'Auth failed.' unless check_auth(params)
 
     puts params[:response_url]
