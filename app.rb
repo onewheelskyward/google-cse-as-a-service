@@ -56,4 +56,19 @@ class App < Sinatra::Base
       text: result['items'][0]['link'],
     }.to_json
   end
+
+  get '/giphy/' do
+    halt 400, 'Auth failed.' unless check_auth(params)
+
+    puts params[:response_url]
+
+    params[:text] = "giphy #{params[:text]}"
+    result = run_search(image = true)
+
+    # do some math on the image to make sure we get the animated gif here.
+    {
+      response_type: 'in_channel',
+      text: result['items'][0]['link'],
+    }.to_json
+  end
 end
