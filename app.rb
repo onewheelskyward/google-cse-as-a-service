@@ -8,7 +8,7 @@ class App < Sinatra::Base
   config_file = File.dirname(__FILE__) + '/config.yml'
   unless File.exist? config_file
     puts 'Auto-copying config distribution file to active config'
-    system "cp #{File.dirname(__FILE__)}/config/config.yml.dist #{config_file}"
+    system "cp #{File.dirname(__FILE__)}/config.yml.dist #{config_file}"
   end
 
   register Sinatra::ConfigFile
