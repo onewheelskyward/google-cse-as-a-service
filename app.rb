@@ -27,7 +27,7 @@ class App < Sinatra::Base
   end
 
   def run_search(query, image = false)
-    result = OnewheelGoogle::search(params[:text], settings.cse_id, settings.api_key, 'high', image)
+    result = OnewheelGoogle::search(query, settings.cse_id, settings.api_key, 'high', image)
 
     unless result
       halt 500, '{"message": "search failed to return results."}'
@@ -68,19 +68,30 @@ class App < Sinatra::Base
 
     puts params[:response_url]
 
-    query = 'site:media.giphy.com ' + params[:text].to_s
+    query = 'giphy ' + params[:text].to_s
     result = run_search(query, image = true)
 
-    result['items'].each do |r|
-      if r['mime'] == 'image/gif'
-        image = r
-        break
+    image = nil
+
+    if result
+      result['items'].each do |r|
+        puts r['mime']
+        if r['mime'] == 'image/gif'
+          image = r
+          break
+        end
       end
     end
 
     # do some math on the image to make sure we get the animated gif here.
-    { response_type: 'in_channel',
-      text: image['link'],
-    }.to_json
+    if image
+      if image['link'][/200_s.gif$/]
+        image['link'].gsub! /200_s.gif/, 'giphy.gif'
+      end
+
+      { response_type: 'in_channel',
+        text: image['link'],
+      }.to_json
+    end
   end
 end
