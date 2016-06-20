@@ -70,7 +70,7 @@ class App < Sinatra::Base
 
     query = 'giphy ' + params[:text].to_s
     result = run_search(query, image = true)
-
+    # Hack this so we can return a new giphy each time.
     image = nil
 
     if result
